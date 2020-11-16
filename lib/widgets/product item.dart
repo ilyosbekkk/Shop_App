@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
 import 'package:shop_app/screens/product_detail.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final String imageUrl;
-
-  const ProductItem(this.id, this.title, this.imageUrl);
-
   @override
   Widget build(BuildContext context) {
+    final item = Provider.of<Product>(context, listen: false);
+
+    print("build is called");
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
       child: GridTile(
-        child: imageUrlWidget(),
+        child: imageUrlWidget(item.imageUrl),
         footer: GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, ProductDetailScreen.routeName,
-                arguments: id);
+                arguments: item.id);
           },
           child: GridTileBar(
-            leading: favorites(),
+            leading: Consumer<Product>(
+                builder: (context, item, child) => favorites(item)),
             trailing: shoppingChart(),
-            title: titleWidget(),
+            title: titleWidget(item.title),
             backgroundColor: Colors.black54,
           ),
         ),
@@ -30,10 +30,18 @@ class ProductItem extends StatelessWidget {
     );
   }
 
-  Widget favorites() {
+  Widget favorites(Product product) {
     return IconButton(
-      icon: Icon(Icons.favorite),
-      onPressed: () {},
+      icon: product.isFavorite
+          ? Icon(
+              Icons.favorite,
+              color: Colors.red,
+            )
+          : Icon(
+              Icons.favorite_border,
+              color: Colors.red,
+            ),
+      onPressed: product.toggleFavoriteStatus,
     );
   }
 
@@ -44,14 +52,14 @@ class ProductItem extends StatelessWidget {
     );
   }
 
-  Widget titleWidget() {
+  Widget titleWidget(String title) {
     return Text(
       title,
       textAlign: TextAlign.center,
     );
   }
 
-  Widget imageUrlWidget() {
+  Widget imageUrlWidget(String imageUrl) {
     return Image.network(
       imageUrl,
       fit: BoxFit.cover,
