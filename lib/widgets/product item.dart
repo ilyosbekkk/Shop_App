@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
 import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
-import 'package:shop_app/screens/product_detail.dart';
+import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/widgets/cart_item.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final item = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
 
-    print("build is called");
+    print("build is called")K;
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
       child: GridTile(
         child: imageUrlWidget(item.imageUrl),
         footer: GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, ProductDetailScreen.routeName,
-                arguments: item.id);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => CartIt()));
           },
           child: GridTileBar(
             leading: Consumer<Product>(
                 builder: (context, item, child) => favorites(item)),
-            trailing: shoppingChart(),
+            trailing: shoppingChart(item, cart),
             title: titleWidget(item.title),
             backgroundColor: Colors.black54,
           ),
@@ -45,10 +48,12 @@ class ProductItem extends StatelessWidget {
     );
   }
 
-  Widget shoppingChart() {
+  Widget shoppingChart(Product item, Cart cart) {
     return IconButton(
       icon: Icon(Icons.shopping_cart),
-      onPressed: () {},
+      onPressed: () {
+        cart.addItems(item.id, item.price, item.title);
+      },
     );
   }
 
