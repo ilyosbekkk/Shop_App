@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/screens/cart_screen.dart';
 import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
+import 'package:shop_app/utils/utils.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 
 class ProductItem extends StatelessWidget {
@@ -11,15 +13,14 @@ class ProductItem extends StatelessWidget {
     final item = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context, listen: false);
 
-    print("build is called")K;
+    print("build is called");
     return ClipRRect(
       borderRadius: BorderRadius.circular(5.0),
       child: GridTile(
         child: imageUrlWidget(item.imageUrl),
         footer: GestureDetector(
           onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => CartIt()));
+           Navigator.pushNamed(context, ProductDetailScreen.routeName, arguments:item.id);
           },
           child: GridTileBar(
             leading: Consumer<Product>(
@@ -52,7 +53,8 @@ class ProductItem extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.shopping_cart),
       onPressed: () {
-        cart.addItems(item.id, item.price, item.title);
+        cart.updateItems(item.id, item.price, item.title, item.imageUrl, "+");
+        toast("Number of products has changed");
       },
     );
   }
