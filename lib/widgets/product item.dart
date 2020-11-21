@@ -20,7 +20,8 @@ class ProductItem extends StatelessWidget {
         child: imageUrlWidget(item.imageUrl),
         footer: GestureDetector(
           onTap: () {
-           Navigator.pushNamed(context, ProductDetailScreen.routeName, arguments:item.id);
+            Navigator.pushNamed(context, ProductDetailScreen.routeName,
+                arguments: item.id);
           },
           child: GridTileBar(
             leading: Consumer<Product>(
