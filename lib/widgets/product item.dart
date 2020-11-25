@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
-import 'package:shop_app/screens/cart_screen.dart';
 import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
-import 'package:shop_app/utils/utils.dart';
-import 'package:shop_app/widgets/cart_item.dart';
+
+
 
 class ProductItem extends StatelessWidget {
   @override
@@ -26,7 +25,7 @@ class ProductItem extends StatelessWidget {
           child: GridTileBar(
             leading: Consumer<Product>(
                 builder: (context, item, child) => favorites(item)),
-            trailing: shoppingChart(item, cart),
+            trailing: shoppingChart(item, cart, context),
             title: titleWidget(item.title),
             backgroundColor: Colors.black54,
           ),
@@ -50,12 +49,23 @@ class ProductItem extends StatelessWidget {
     );
   }
 
-  Widget shoppingChart(Product item, Cart cart) {
+  Widget shoppingChart(Product item, Cart cart, BuildContext context) {
     return IconButton(
       icon: Icon(Icons.shopping_cart),
       onPressed: () {
         cart.updateItems(item.id, item.price, item.title, item.imageUrl, "+");
-        toast("Number of products has changed");
+        /*Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Your cart has changed!"),
+            action: SnackBarAction(
+              label: "Undo",
+              textColor: Colors.blue,
+              onPressed: () {
+                cart.updateItems(item.id, item.price, item.title, item.imageUrl, "-");
+                Consumer<Cart>(
+                  builder: (context, cart,  child) => Badge(child: child, value: cart.items.length.toString()),
+                );
+              },
+            )));*/
       },
     );
   }

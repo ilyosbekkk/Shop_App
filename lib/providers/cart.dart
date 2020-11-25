@@ -13,6 +13,10 @@ class CartItem with ChangeNotifier {
       @required this.title,
       @required this.quantity,
       @required this.price});
+
+  get overall {
+    return quantity * price;
+  }
 }
 
 class Cart with ChangeNotifier {
@@ -25,17 +29,21 @@ class Cart with ChangeNotifier {
   void updateItems(String productId, double price, String title,
       String imageUrl, String sign) {
     if (_items.containsKey(productId)) {
-      _items.update(
-          productId,
-          (existingCartItem) => CartItem(
-                imageUrl: existingCartItem.imageUrl,
-                id: existingCartItem.id,
-                title: existingCartItem.title,
-                quantity: sign == "+"
-                    ? existingCartItem.quantity + 1
-                    : existingCartItem.quantity - 1,
-                price: existingCartItem.price,
-              ));
+      if (_items[productId].quantity >= 1)
+        _items.update(
+            productId,
+            (existingCartItem) => CartItem(
+                  imageUrl: existingCartItem.imageUrl,
+                  id: existingCartItem.id,
+                  title: existingCartItem.title,
+                  quantity: sign == "+"
+                      ? existingCartItem.quantity + 1
+                      : existingCartItem.quantity - 1,
+                  price: existingCartItem.price,
+                ));
+      else {
+        _items.remove(productId);
+      }
     } else {
       _items.putIfAbsent(
           productId,

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products overview screen.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 import 'screens/product_detail_screen.dart';
@@ -20,6 +22,9 @@ class MyApp extends StatelessWidget {
           create: (context) => Products(),
         ),
         ChangeNotifierProvider(
+          create: (context) => Product(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => Cart(),
         ),
       ],
@@ -32,10 +37,12 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Roboto',
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: ProductsOverview(),
+        initialRoute: ProductsOverview.routeName,
         routes: {
+          ProductsOverview.routeName: (context) => ProductsOverview(),
           ProductDetailScreen.routeName: (context) => ProductDetailScreen(),
           CartScreen.routName: (context) => CartScreen(),
+          MyOrders.routeName: (context) => MyOrders(),
         },
       ),
     );

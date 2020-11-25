@@ -35,6 +35,7 @@ class Products with ChangeNotifier {
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+
   ];
 
   List<Product> get items {
