@@ -9,11 +9,11 @@ class Product with ChangeNotifier {
   bool isFavorite;
 
   Product(
-      {@required this.id,
-      @required this.title,
-      @required this.description,
-      @required this.price,
-      @required this.imageUrl,
+      {this.id,
+      this.title,
+      this.description,
+      this.price,
+      this.imageUrl,
       this.isFavorite = false});
 
   void toggleFavoriteStatus() {
@@ -21,6 +21,3 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 }
-
-
-

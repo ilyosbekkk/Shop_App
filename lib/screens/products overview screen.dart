@@ -1,14 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/badge.dart';
-import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
-import 'package:shop_app/widgets/products_grid.dart';
 import 'package:shop_app/widgets/drawer.dart';
+import 'package:shop_app/widgets/products_grid.dart';
 
 enum FilteredItmes { FAVORITES, ALL }
 
@@ -21,29 +19,13 @@ class ProductsOverview extends StatefulWidget {
 
 class _ProductsOverviewState extends State<ProductsOverview> {
   bool showOnlyFavorites = false;
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
   Widget build(BuildContext context) {
-    final heightOfScreen = MediaQuery
-        .of(context)
-        .size
-        .height;
-    final widthOftheScreen = MediaQuery
-        .of(context)
-        .size
-        .width;
-    CollectionReference products = FirebaseFirestore.instance.collection(
-        'products');
+    final heightOfScreen = MediaQuery.of(context).size.height;
+    final widthOftheScreen = MediaQuery.of(context).size.width;
 
-    Future<void> addItem() {
-      return products.add({
-        'name': "Olma",
-        'price': "4.99",
-        'quantity': "5",
 
-      });
-    }
     return Scaffold(
         appBar: AppBar(
           title: Text("Halal Shop"),
@@ -79,21 +61,13 @@ class _ProductsOverviewState extends State<ProductsOverview> {
             )
           ],
         ),
-        body: Container(child: RaisedButton(
-          child: Text("Add"), onPressed: addItem
-        ),)
+        body:ProductGrid(
+          screenWidth: widthOftheScreen,
+          screenHeight: heightOfScreen,
+          showOnlyFavorites: showOnlyFavorites,
+        ), drawer: DrawerWidget(),);
       //drawer: DrawerWidget(),
-    );
   }
 
 
 }
-
-
-/*
-ProductGrid(
-        screenWidth: widthOftheScreen,
-        screenHeight: heightOfScreen,
-        showOnlyFavorites: showOnlyFavorites,
-      ),
- */

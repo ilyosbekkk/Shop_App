@@ -16,6 +16,8 @@ class ProductGrid extends StatelessWidget {
     final products =
         showOnlyFavorites ? productsData.favorites : productsData.items;
 
+    productsData.result();
+
     return showOnlyFavorites && products.isEmpty
         ? noFavorites()
         : GridView.builder(

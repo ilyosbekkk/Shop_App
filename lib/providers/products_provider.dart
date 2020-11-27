@@ -1,8 +1,42 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'file:///D:/Flutter%20Projects/shop_app/lib/providers/product.dart';
+import 'package:shop_app/providers/product.dart';
 
 class Products with ChangeNotifier {
-  List<Product> _items = [
+  List<Product> _items = [];
+
+  List<Product> get items {
+    return [..._items];
+  }
+
+  void result() {
+    FirebaseFirestore.instance
+        .collection('products')
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((doc) {
+                print(doc['title']);
+                items.add(Product(
+                    id: doc['id'],
+                    title: doc['title'],
+                    description: doc['description'],
+                    price: doc['price'],
+                    imageUrl: doc['imageUrl'],
+                    isFavorite: doc['isFavorite']));
+              })
+            });
+  }
+
+  List<Product> get favorites {
+    return _items.where((element) => element.isFavorite == true).toList();
+  }
+
+  Product findById(String id) {
+    return items.firstWhere((element) => element.id == id);
+  }
+}
+
+/*[
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -36,17 +70,4 @@ class Products with ChangeNotifier {
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
 
-  ];
-
-  List<Product> get items {
-    return [..._items];
-  }
-
-  List<Product> get favorites {
-    return _items.where((element) => element.isFavorite == true).toList();
-  }
-
-  Product findById(String id) {
-    return items.firstWhere((element) => element.id == id);
-  }
-}
+  ];*/

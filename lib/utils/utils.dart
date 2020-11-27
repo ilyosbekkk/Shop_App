@@ -11,3 +11,4 @@ void toast(String text) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
