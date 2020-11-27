@@ -62,7 +62,7 @@ class ProductDetailScreen extends StatelessWidget {
               Icons.favorite_border,
               color: Colors.red,
             ),
-      onPressed: product.toggleFavoriteStatus,
+      onPressed: null
     );
   }
 

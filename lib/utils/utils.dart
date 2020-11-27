@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -11,4 +12,5 @@ void toast(String text) {
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
 

@@ -18,6 +18,9 @@ dependencies:
   fluttertoast: ^7.1.1
   firebase_core: "^0.5.2+1"
   cloud_firestore: ^0.14.3+1
+  camera:
+  path_provider:
+  path:
 dev_dependencies:
   flutter_test:
     sdk: flutter
