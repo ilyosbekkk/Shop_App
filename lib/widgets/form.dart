@@ -4,14 +4,16 @@ import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/widgets/camera.dart';
 
 class FormWidget extends StatefulWidget {
   final formKey;
-  final String imagePath;
 
-  const FormWidget({this.formKey, this.imagePath});
+  // final String imagePath;
+
+  const FormWidget({this.formKey});
 
   @override
   _FormWidgetState createState() => _FormWidgetState();
@@ -37,7 +39,13 @@ class _FormWidgetState extends State<FormWidget> {
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context, listen: false);
-
+    final cameraProvider = Provider.of<CameraProvider>(context);
+    if (cameraProvider.picturePath != null) {
+      cameraProvider
+          .uploadToFireStore(cameraProvider.picturePath)
+          .then((value) => print("loading..."))
+          .whenComplete(() => print("done"));
+    }
     return SingleChildScrollView(
       child: Form(
         key: widget.formKey,
@@ -55,14 +63,12 @@ class _FormWidgetState extends State<FormWidget> {
             editText("price", "Please, enter text!", price),
             editText("description", "Please, enter text!", description),
             selectImage(),
-            if (openCameraOptions && widget.imagePath == null) imageButtons(),
-            Text("or"),
-            editText("imageUrl", "Please enter text!", imageUrl),
-            if (widget.imagePath != null)
+            if (openCameraOptions) imageButtons(),
+            if (cameraProvider.picturePath != null)
               Container(
                 width: 100,
                 height: 100,
-                child: Image.file(File(widget.imagePath)),
+                child: Image.file(File(cameraProvider.picturePath)),
               ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -72,8 +78,6 @@ class _FormWidgetState extends State<FormWidget> {
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
                     addProduct(productsData.items.length);
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text('Processing Data')));
                   }
                 },
                 child: Text('Add a product'),
@@ -127,25 +131,28 @@ class _FormWidgetState extends State<FormWidget> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        RaisedButton(
-          color: Colors.green,
-          textColor: Colors.white,
+        IconButton(
           onPressed: () {},
-          child: Text('open gallery'),
+          icon: Icon(
+            Icons.perm_media,
+            color: Colors.blue,
+            size: 50,
+          ),
         ),
-        RaisedButton(
-          color: Colors.green,
-          textColor: Colors.white,
-          onPressed: () {
-            initializeCamera();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        TakePictureScreen(camera: firstCamera)));
-          },
-          child: Text('open camera'),
-        ),
+        IconButton(
+            onPressed: () {
+              initializeCamera();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          TakePictureScreen(camera: firstCamera)));
+            },
+            icon: Icon(
+              Icons.camera_alt,
+              color: Colors.blue,
+              size: 50,
+            )),
       ],
     );
   }

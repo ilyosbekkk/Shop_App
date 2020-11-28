@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products_provider.dart';
@@ -33,6 +34,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
+        ), ChangeNotifierProvider(
+          create: (context) => CameraProvider(),
         ),
       ],
       child: MaterialApp(

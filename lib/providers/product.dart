@@ -16,6 +16,4 @@ class Product with ChangeNotifier {
       this.price,
       this.imageUrl,
       this.isFavorite = false});
-
-
 }

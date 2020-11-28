@@ -1,20 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/widgets/form.dart';
 
-class AddProduct extends StatefulWidget {
-  static final routeName = "/add_product";
-  final String imagePath;
-
-  const AddProduct({this.imagePath});
-
-  @override
-  AddProductState createState() {
-    return AddProductState();
-  }
-}
-
-class AddProductState extends State<AddProduct> {
+class AddProduct extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  static final routeName = "/add_product";
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +16,6 @@ class AddProductState extends State<AddProduct> {
       body: SafeArea(
           child: FormWidget(
         formKey: _formKey,
-        imagePath: widget.imagePath,
       )),
     );
   }

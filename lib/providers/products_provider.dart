@@ -14,7 +14,7 @@ class Products with ChangeNotifier {
    products.add(Product(id: "d", title: "df", description: "fvf", price: 12.3, isFavorite: false));
    print(products[0].title);
     FirebaseFirestore.instance
-        .collection('products')
+        .collection('products').orderBy("price",  descending: true)
         .get()
         .then((QuerySnapshot querySnapshot) => {
       querySnapshot.docs.forEach((doc) {
