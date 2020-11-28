@@ -1,17 +1,14 @@
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
-import 'package:shop_app/widgets/camera.dart';
 
 class FormWidget extends StatefulWidget {
   final formKey;
-
-  // final String imagePath;
 
   const FormWidget({this.formKey});
 
@@ -40,12 +37,12 @@ class _FormWidgetState extends State<FormWidget> {
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context, listen: false);
     final cameraProvider = Provider.of<CameraProvider>(context);
-    if (cameraProvider.picturePath != null) {
+    /*  if (cameraProvider.picturePath != null) {
       cameraProvider
           .uploadToFireStore(cameraProvider.picturePath)
           .then((value) => print("loading..."))
           .whenComplete(() => print("done"));
-    }
+    }*/
     return SingleChildScrollView(
       child: Form(
         key: widget.formKey,
@@ -63,12 +60,17 @@ class _FormWidgetState extends State<FormWidget> {
             editText("price", "Please, enter text!", price),
             editText("description", "Please, enter text!", description),
             selectImage(),
-            if (openCameraOptions) imageButtons(),
+            if (openCameraOptions) imageButtons(cameraProvider),
             if (cameraProvider.picturePath != null)
-              Container(
-                width: 100,
-                height: 100,
-                child: Image.file(File(cameraProvider.picturePath)),
+              Stack(
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    child: Image.file(File(cameraProvider.picturePath)),
+                  ),
+                  Positioned(bottom: 70,  left: 53,child: IconButton(icon: Icon(Icons.clear,  color: Colors.red,), onPressed: null))
+                ],
               ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -77,7 +79,7 @@ class _FormWidgetState extends State<FormWidget> {
                 textColor: Colors.white,
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
-                    addProduct(productsData.items.length);
+                    addProduct(productsData.items.length, cameraProvider);
                   }
                 },
                 child: Text('Add a product'),
@@ -127,12 +129,14 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget imageButtons() {
+  Widget imageButtons(CameraProvider cameraProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            cameraProvider.selectImage(ImageSource.gallery);
+          },
           icon: Icon(
             Icons.perm_media,
             color: Colors.blue,
@@ -141,12 +145,7 @@ class _FormWidgetState extends State<FormWidget> {
         ),
         IconButton(
             onPressed: () {
-              initializeCamera();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          TakePictureScreen(camera: firstCamera)));
+              cameraProvider.selectImage(ImageSource.camera);
             },
             icon: Icon(
               Icons.camera_alt,
@@ -157,19 +156,19 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Future<void> addProduct(int id) {
-    return products.add({
-      "id": id.toString(),
-      "title": title.text,
-      "imageUrl": imageUrl.text,
-      "isFavorite": false,
-      "description": description.text,
-      "price": double.parse(price.text)
+  Future<void> addProduct(int id, CameraProvider cameraProvider) {
+    cameraProvider
+        .uploadToFireStore(cameraProvider.picturePath, id.toString())
+        .whenComplete(() {
+      products.add({
+        "id": id.toString(),
+        "title": title.text,
+        "imageUrl": cameraProvider.url != null ? cameraProvider.url : "unknown",
+        "isFavorite": false,
+        "description": description.text,
+        "price": double.parse(price.text)
+      });
     });
-  }
-
-  void initializeCamera() async {
-    cameras = await availableCameras();
-    firstCamera = cameras.first;
+    // print(cameraProvider.url);
   }
 }

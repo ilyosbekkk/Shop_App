@@ -39,9 +39,7 @@ class Total extends StatelessWidget {
     );
   }
 
-  void  overallPrice(Cart cart,  double overall){
-
-  }
+  void  overallPrice(Cart cart,  double overall){}
 
   void  openSignInModalView(BuildContext context) async{
      await  showModalBottomSheet(context: context, builder: (context) => SignIn());

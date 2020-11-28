@@ -3,21 +3,22 @@ import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/widgets/product%20item.dart';
 import 'package:provider/provider.dart';
 
-class ProductGrid extends StatelessWidget {
+class ProductGrid extends StatefulWidget {
   final screenWidth, screenHeight;
-  final showOnlyFavorites;
 
-  const ProductGrid(
-      {this.screenWidth, this.screenHeight, this.showOnlyFavorites});
+  ProductGrid({this.screenWidth, this.screenHeight});
 
+  @override
+  _ProductGridState createState() => _ProductGridState();
+}
+
+class _ProductGridState extends State<ProductGrid> {
   @override
   Widget build(BuildContext context) {
     final productsData = Provider.of<Products>(context);
-
-    final products = showOnlyFavorites ? productsData.favorites : productsData.items;
-
-    return showOnlyFavorites && products.isEmpty
-        ? noFavorites()
+    final products = productsData.items;
+    return productsData.onlyFavorites && products.isEmpty
+        ? noFavorites(productsData)
         : GridView.builder(
             padding: const EdgeInsets.all(10),
             itemCount: products.length,
@@ -28,18 +29,23 @@ class ProductGrid extends StatelessWidget {
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 3 / 2,
-                crossAxisSpacing: screenWidth * 0.05,
-                mainAxisSpacing: screenHeight * 0.01),
+                crossAxisSpacing: widget.screenWidth * 0.05,
+                mainAxisSpacing: widget.screenHeight * 0.01),
           );
   }
 
-  Widget noFavorites() {
+  Widget noFavorites(Products products) {
     return Center(
       child: Column(
         children: [
-          Text("No Favorite items found!",  style: TextStyle(fontSize: 20),),
+          Text(
+            "No Favorite items found!",
+            style: TextStyle(fontSize: 20),
+          ),
           RaisedButton(
-            onPressed: () {},
+            onPressed: () {
+              products.showOnlyFavorites = false;
+            },
             color: Colors.green,
             child: Text("See all"),
             textColor: Colors.white,
