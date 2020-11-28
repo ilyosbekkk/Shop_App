@@ -13,14 +13,6 @@ class Products with ChangeNotifier {
   }
 
   Products() {
-    List<Product> products = new List();
-    products.add(Product(
-        id: "d",
-        title: "df",
-        description: "fvf",
-        price: 12.3,
-        isFavorite: false));
-    print(products[0].title);
     FirebaseFirestore.instance
         .collection('products')
         .orderBy("price", descending: true)

@@ -160,6 +160,7 @@ class _FormWidgetState extends State<FormWidget> {
     cameraProvider
         .uploadToFireStore(cameraProvider.picturePath, id.toString())
         .whenComplete(() {
+          print(cameraProvider.picturePath);
       products.add({
         "id": id.toString(),
         "title": title.text,
