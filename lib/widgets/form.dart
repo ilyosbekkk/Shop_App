@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/camera_provider.dart';
+import 'package:shop_app/providers/add_product_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
 
 class FormWidget extends StatefulWidget {
@@ -23,7 +23,7 @@ class _FormWidgetState extends State<FormWidget> {
   TextEditingController description = TextEditingController();
 
   CollectionReference products =
-  FirebaseFirestore.instance.collection('products');
+      FirebaseFirestore.instance.collection('products');
   List<CameraDescription> cameras;
   CameraDescription firstCamera;
 
@@ -34,14 +34,9 @@ class _FormWidgetState extends State<FormWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<Products>(context, listen: false);
-    final cameraProvider = Provider.of<CameraProvider>(context);
-    /*  if (cameraProvider.picturePath != null) {
-      cameraProvider
-          .uploadToFireStore(cameraProvider.picturePath)
-          .then((value) => print("loading..."))
-          .whenComplete(() => print("done"));
-    }*/
+    final cameraProvider = Provider.of<AddProductProvider>(context);
+    final productsProvider = Provider.of<Products>(context);
+
     return SingleChildScrollView(
       child: Form(
         key: widget.formKey,
@@ -93,7 +88,14 @@ class _FormWidgetState extends State<FormWidget> {
                 textColor: Colors.white,
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
-                    addProduct(productsData.items.length, cameraProvider);
+                    cameraProvider.addProduct(
+                       products,
+                        productsProvider.items.length,
+                        cameraProvider,
+                        title.text,
+                        description.text,
+                        double.parse(price.text),
+                        context);
                   }
                 },
                 child: Text('Add a product'),
@@ -105,14 +107,14 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget editText(String fieldName, String errorMessage,
-      TextEditingController text) {
+  Widget editText(
+      String fieldName, String errorMessage, TextEditingController text) {
     return Container(
       margin: EdgeInsets.all(10),
       child: TextFormField(
         controller: text,
         decoration:
-        InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
+            InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
         validator: (value) {
           if (value.isEmpty) {
             return errorMessage;
@@ -131,8 +133,8 @@ class _FormWidgetState extends State<FormWidget> {
           icon: !openCameraOptions
               ? Icon(Icons.expand_more)
               : Icon(
-            Icons.expand_less,
-          ),
+                  Icons.expand_less,
+                ),
           onPressed: () {
             setState(() {
               openCameraOptions = !openCameraOptions;
@@ -143,7 +145,7 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget imageButtons(CameraProvider cameraProvider) {
+  Widget imageButtons(AddProductProvider cameraProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -168,31 +170,5 @@ class _FormWidgetState extends State<FormWidget> {
             )),
       ],
     );
-  }
-
-  Future<void> addProduct(int id, CameraProvider cameraProvider) {
-    cameraProvider
-        .uploadToFireStore(cameraProvider.picturePath, id.toString())
-        .whenComplete(() {
-      products.add({
-        "id": id.toString(),
-        "title": title.text,
-        "imageUrl": cameraProvider.url != null ? cameraProvider.url : "unknown",
-        "isFavorite": false,
-        "description": description.text,
-        "price": double.parse(price.text)
-      }).whenComplete(() {
-        Scaffold.of(context).showSnackBar(SnackBar(content: Text("done!")));
-          setState(() {
-            title.text = "";
-            price.text = "";
-            description.text = "";
-            cameraProvider.picturePath = null;
-          });
-      }
-      );
-    });
-
-    // print(cameraProvider.url);
   }
 }

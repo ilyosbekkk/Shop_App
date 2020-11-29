@@ -25,7 +25,6 @@ class _ProductsOverviewState extends State<ProductsOverview> {
   @override
   void initState() {
     super.initState();
-    Authentication authentication = Authentication();
 
   }
   @override
@@ -33,6 +32,9 @@ class _ProductsOverviewState extends State<ProductsOverview> {
     final heightOfScreen = MediaQuery.of(context).size.height;
     final widthOftheScreen = MediaQuery.of(context).size.width;
     final products = Provider.of<Products>(context);
+    final  auth = Provider.of<Authentication>(context);
+
+
 
 
     return Scaffold(

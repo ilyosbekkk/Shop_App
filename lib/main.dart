@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth_provider.dart';
-import 'package:shop_app/providers/camera_provider.dart';
+import 'package:shop_app/providers/add_product_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products_provider.dart';
@@ -12,6 +12,7 @@ import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products overview screen.dart';
+import 'package:shop_app/screens/settings_screen.dart';
 import 'screens/product_detail_screen.dart';
 
 Future<void> main() async {
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
           create: (context) => Cart(),
         ),
         ChangeNotifierProvider(
-          create: (context) => CameraProvider(),
+          create: (context) => AddProductProvider(),
         ),
       ],
       child: MaterialApp(
@@ -60,7 +61,8 @@ class MyApp extends StatelessWidget {
           CartScreen.routName: (context) => CartScreen(),
           MyOrders.routeName: (context) => MyOrders(),
           AddProduct.routeName: (context) => AddProduct(),
-          AuthScreen.routeName: (context) => AuthScreen()
+          AuthScreen.routeName: (context) => AuthScreen(),
+          SettingsScreen.routeName: (context) => SettingsScreen(),
         },
       ),
     );

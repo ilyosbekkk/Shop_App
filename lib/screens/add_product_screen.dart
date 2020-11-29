@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/widgets/form.dart';
 
 class AddProduct extends StatelessWidget {

@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -13,4 +12,6 @@ void toast(String text) {
       fontSize: 16.0);
 }
 
-
+void showSnackBar(BuildContext context, String message) {
+  Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+}
