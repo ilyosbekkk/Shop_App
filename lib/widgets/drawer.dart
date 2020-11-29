@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screens/add_product_screen.dart';
+import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products%20overview%20screen.dart';
 
@@ -39,8 +40,8 @@ class DrawerWidget extends StatelessWidget {
             Navigator.pushNamed(context, MyOrders.routeName);
           }),
           Divider(),
-          drawerSections(Icons.logout, "Logout", () {
-            Navigator.pushNamed(context, MyOrders.routeName);
+          drawerSections(Icons.login, "LogIn", () {
+            Navigator.pushReplacementNamed(context, AuthScreen.routeName);
           }),
         ],
       ),

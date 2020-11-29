@@ -2,11 +2,13 @@ import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/camera_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/add_product_screen.dart';
+import 'package:shop_app/screens/auth_screen.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products overview screen.dart';
@@ -30,11 +32,15 @@ class MyApp extends StatelessWidget {
           create: (context) => Products(),
         ),
         ChangeNotifierProvider(
+          create: (context) => Authentication(),
+        ),
+        ChangeNotifierProvider(
           create: (context) => Product(),
         ),
         ChangeNotifierProvider(
           create: (context) => Cart(),
-        ), ChangeNotifierProvider(
+        ),
+        ChangeNotifierProvider(
           create: (context) => CameraProvider(),
         ),
       ],
@@ -54,6 +60,7 @@ class MyApp extends StatelessWidget {
           CartScreen.routName: (context) => CartScreen(),
           MyOrders.routeName: (context) => MyOrders(),
           AddProduct.routeName: (context) => AddProduct(),
+          AuthScreen.routeName: (context) => AuthScreen()
         },
       ),
     );

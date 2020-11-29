@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
@@ -17,12 +18,22 @@ class ProductsOverview extends StatefulWidget {
   _ProductsOverviewState createState() => _ProductsOverviewState();
 }
 
+
+
 class _ProductsOverviewState extends State<ProductsOverview> {
+
+  @override
+  void initState() {
+    super.initState();
+    Authentication authentication = Authentication();
+
+  }
   @override
   Widget build(BuildContext context) {
     final heightOfScreen = MediaQuery.of(context).size.height;
     final widthOftheScreen = MediaQuery.of(context).size.width;
     final products = Provider.of<Products>(context);
+
 
     return Scaffold(
       appBar: AppBar(

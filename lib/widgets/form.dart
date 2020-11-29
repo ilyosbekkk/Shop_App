@@ -21,10 +21,9 @@ class _FormWidgetState extends State<FormWidget> {
   TextEditingController title = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController description = TextEditingController();
-  TextEditingController imageUrl = TextEditingController();
 
   CollectionReference products =
-      FirebaseFirestore.instance.collection('products');
+  FirebaseFirestore.instance.collection('products');
   List<CameraDescription> cameras;
   CameraDescription firstCamera;
 
@@ -62,15 +61,30 @@ class _FormWidgetState extends State<FormWidget> {
             selectImage(),
             if (openCameraOptions) imageButtons(cameraProvider),
             if (cameraProvider.picturePath != null)
-              Stack(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: Image.file(File(cameraProvider.picturePath)),
-                  ),
-                  Positioned(bottom: 70,  left: 53,child: IconButton(icon: Icon(Icons.clear,  color: Colors.red,), onPressed: null))
-                ],
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all()),
+                child: Stack(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      child: Image.file(File(cameraProvider.picturePath)),
+                    ),
+                    Positioned(
+                        bottom: 70,
+                        left: 53,
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              color: Colors.red,
+                            ),
+                            onPressed: null))
+                  ],
+                ),
               ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -91,14 +105,14 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget editText(
-      String fieldName, String errorMessage, TextEditingController text) {
+  Widget editText(String fieldName, String errorMessage,
+      TextEditingController text) {
     return Container(
       margin: EdgeInsets.all(10),
       child: TextFormField(
         controller: text,
         decoration:
-            InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
+        InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
         validator: (value) {
           if (value.isEmpty) {
             return errorMessage;
@@ -117,8 +131,8 @@ class _FormWidgetState extends State<FormWidget> {
           icon: !openCameraOptions
               ? Icon(Icons.expand_more)
               : Icon(
-                  Icons.expand_less,
-                ),
+            Icons.expand_less,
+          ),
           onPressed: () {
             setState(() {
               openCameraOptions = !openCameraOptions;
@@ -160,7 +174,6 @@ class _FormWidgetState extends State<FormWidget> {
     cameraProvider
         .uploadToFireStore(cameraProvider.picturePath, id.toString())
         .whenComplete(() {
-          print(cameraProvider.picturePath);
       products.add({
         "id": id.toString(),
         "title": title.text,
@@ -168,8 +181,18 @@ class _FormWidgetState extends State<FormWidget> {
         "isFavorite": false,
         "description": description.text,
         "price": double.parse(price.text)
-      });
+      }).whenComplete(() {
+        Scaffold.of(context).showSnackBar(SnackBar(content: Text("done!")));
+          setState(() {
+            title.text = "";
+            price.text = "";
+            description.text = "";
+            cameraProvider.picturePath = null;
+          });
+      }
+      );
     });
+
     // print(cameraProvider.url);
   }
 }
