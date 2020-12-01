@@ -50,13 +50,11 @@ class DrawerWidget extends StatelessWidget {
           if (firebaseUser != null)
             drawerSections(Icons.login, "SignOut", () {
               auth.signOut(context).whenComplete(() {
-                print(auth.isAuthenticated);
                 Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
               });
             }),
           if (firebaseUser == null)
             drawerSections(Icons.login, "SignIn", () {
-              print(auth.isAuthenticated);
               Navigator.pushReplacementNamed(context, AuthScreen.routeName);
             }),
         ],

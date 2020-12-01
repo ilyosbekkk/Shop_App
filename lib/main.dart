@@ -13,7 +13,6 @@ import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products overview screen.dart';
 import 'package:shop_app/screens/settings_screen.dart';
-import 'package:shop_app/utils/utils.dart';
 import 'screens/product_detail_screen.dart';
 
 Future<void> main() async {
@@ -27,6 +26,8 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

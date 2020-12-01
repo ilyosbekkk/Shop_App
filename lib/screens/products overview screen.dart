@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +6,7 @@ import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
+import 'package:shop_app/utils/utils.dart';
 import 'package:shop_app/widgets/badge.dart';
 import 'package:shop_app/widgets/drawer.dart';
 import 'package:shop_app/widgets/products_grid.dart';
@@ -18,24 +20,26 @@ class ProductsOverview extends StatefulWidget {
   _ProductsOverviewState createState() => _ProductsOverviewState();
 }
 
-
-
 class _ProductsOverviewState extends State<ProductsOverview> {
+  Authentication authentication;
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
+    authentication = Authentication();
+    if (authentication.currentUser != null) {
+      toast("Welcome ${authentication.currentUser.email}");
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     final heightOfScreen = MediaQuery.of(context).size.height;
     final widthOftheScreen = MediaQuery.of(context).size.width;
     final products = Provider.of<Products>(context);
-    final  auth = Provider.of<Authentication>(context);
-
-
-
+    final auth = Provider.of<Authentication>(context);
+    final user = context.watch<User>();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,14 +54,12 @@ class _ProductsOverviewState extends State<ProductsOverview> {
               }
             },
             itemBuilder: (context) => [
-              PopupMenuItem(
-                  child: Text("Favorites"), value: FilteredItmes.FAVORITES),
+              PopupMenuItem(child: Text("Favorites"), value: FilteredItmes.FAVORITES),
               PopupMenuItem(child: Text("All"), value: FilteredItmes.ALL),
             ],
           ),
           Consumer<Cart>(
-            builder: (context, cart, child) =>
-                Badge(child: child, value: cart.items.length.toString()),
+            builder: (context, cart, child) => Badge(child: child, value: cart.items.length.toString()),
             child: IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, CartScreen.routName);
