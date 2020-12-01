@@ -13,6 +13,7 @@ import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/products overview screen.dart';
 import 'package:shop_app/screens/settings_screen.dart';
+import 'package:shop_app/utils/utils.dart';
 import 'screens/product_detail_screen.dart';
 
 Future<void> main() async {
@@ -20,7 +21,6 @@ Future<void> main() async {
   await Firebase.initializeApp();
   final cameras = await availableCameras();
 
-  final firstCamera = cameras.first;
   runApp(MyApp());
 }
 
@@ -44,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => AddProductProvider(),
         ),
+        StreamProvider(create: (context) => context.read<Authentication>().user)
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

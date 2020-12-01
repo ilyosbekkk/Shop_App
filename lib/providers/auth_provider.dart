@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shop_app/screens/products%20overview%20screen.dart';
 import 'package:shop_app/utils/utils.dart';
 
 class Authentication with ChangeNotifier {
@@ -10,6 +12,7 @@ class Authentication with ChangeNotifier {
   String _userName;
   String _fullName;
   bool _isSignedIn = false;
+  String _personal_uid;
 
   Authentication() {
     FirebaseFirestore.instance.collection('users').get().then((QuerySnapshot querySnapshot) => {
@@ -21,6 +24,12 @@ class Authentication with ChangeNotifier {
 
   String get email {
     return _email;
+  }
+
+  Stream<User> get user => FirebaseAuth.instance.authStateChanges();
+
+  String get refreshToken {
+    return _personal_uid;
   }
 
   String get userName {
@@ -48,7 +57,8 @@ class Authentication with ChangeNotifier {
           _email = email;
           _userName = userName;
           _fullName = fullName;
-          uploadUserInfo(users, email, fullName, userName, "rughiwghwiwerUYEOEEWUuihuirtr6");
+          Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
+          uploadUserInfo(users, email, fullName, userName, _personal_uid);
         }
       });
     } on FirebaseAuthException catch (e) {
@@ -64,10 +74,20 @@ class Authentication with ChangeNotifier {
 
   Future<void> signIn(String email, String password, BuildContext context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )
+          .whenComplete(() async {
+        authState(context);
+        if (_isSignedIn) {
+          print(_personal_uid);
+          _email = email;
+          _userName = userName;
+          _fullName = fullName;
+        }
+      });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackBar(context, "No user found!");
@@ -97,9 +117,12 @@ class Authentication with ChangeNotifier {
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (user == null) {
         _isSignedIn = false;
-        showSnackBar(context, "current state:  not authenticated!");
+
+        //showSnackBar(context, "current state:  not authenticated!");
       } else {
+        _personal_uid = user.uid;
         _isSignedIn = true;
+        Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
         showSnackBar(context, "current state:  authenticated!");
       }
     });

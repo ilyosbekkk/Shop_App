@@ -4,8 +4,6 @@ import 'package:shop_app/providers/auth_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = "/settings";
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

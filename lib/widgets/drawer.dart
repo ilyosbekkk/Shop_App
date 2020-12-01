@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth_provider.dart';
@@ -11,6 +12,7 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Authentication>(context);
+    final firebaseUser = context.watch<User>();
 
     return SafeArea(
         child: Drawer(
@@ -45,14 +47,14 @@ class DrawerWidget extends StatelessWidget {
             Navigator.pushNamed(context, SettingsScreen.routeName);
           }),
           Divider(),
-          if (auth.isAuthenticated)
+          if (firebaseUser != null)
             drawerSections(Icons.login, "SignOut", () {
               auth.signOut(context).whenComplete(() {
                 print(auth.isAuthenticated);
-                Navigator.pushNamed(context, ProductsOverview.routeName);
+                Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
               });
             }),
-          if (!auth.isAuthenticated)
+          if (firebaseUser == null)
             drawerSections(Icons.login, "SignIn", () {
               print(auth.isAuthenticated);
               Navigator.pushReplacementNamed(context, AuthScreen.routeName);
