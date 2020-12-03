@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/auth_provider.dart';
+
+import 'auth_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   static String routeName = "/settings";
@@ -15,12 +16,19 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Column(
+
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title: Text("User:"),
-              trailing: Text("Ilyosbek Ibrokhimov"),
-              subtitle: Text(user.email),
-            )
+            user != null
+                ? ListTile(title: Text("User:"), trailing: Text("loading.."), subtitle: Text(user.email))
+                : RaisedButton(
+
+                    child: Text("Sign in"),
+                    color: Colors.green,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+                    })
           ],
         ),
       ),

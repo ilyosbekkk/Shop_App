@@ -38,6 +38,7 @@ flutter:
 
   assets:
       - assets/images/google.jpg
+      - assets/images/gmail.jpg
 
 
   fonts:

@@ -22,8 +22,7 @@ class _FormWidgetState extends State<FormWidget> {
   TextEditingController price = TextEditingController();
   TextEditingController description = TextEditingController();
 
-  CollectionReference products =
-      FirebaseFirestore.instance.collection('products');
+  CollectionReference products = FirebaseFirestore.instance.collection('products');
   List<CameraDescription> cameras;
   CameraDescription firstCamera;
 
@@ -59,9 +58,7 @@ class _FormWidgetState extends State<FormWidget> {
               Container(
                 margin: EdgeInsets.only(top: 15),
                 padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all()),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all()),
                 child: Stack(
                   children: [
                     Container(
@@ -88,14 +85,7 @@ class _FormWidgetState extends State<FormWidget> {
                 textColor: Colors.white,
                 onPressed: () {
                   if (widget.formKey.currentState.validate()) {
-                    cameraProvider.addProduct(
-                       products,
-                        productsProvider.items.length,
-                        cameraProvider,
-                        title.text,
-                        description.text,
-                        double.parse(price.text),
-                        context);
+                    cameraProvider.addProduct(products, productsProvider.items.length, cameraProvider, title.text, description.text, double.parse(price.text), context);
                   }
                 },
                 child: Text('Add a product'),
@@ -107,14 +97,12 @@ class _FormWidgetState extends State<FormWidget> {
     );
   }
 
-  Widget editText(
-      String fieldName, String errorMessage, TextEditingController text) {
+  Widget editText(String fieldName, String errorMessage, TextEditingController text) {
     return Container(
       margin: EdgeInsets.all(10),
       child: TextFormField(
         controller: text,
-        decoration:
-            InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
+        decoration: InputDecoration(labelText: fieldName, border: OutlineInputBorder()),
         validator: (value) {
           if (value.isEmpty) {
             return errorMessage;
@@ -146,29 +134,31 @@ class _FormWidgetState extends State<FormWidget> {
   }
 
   Widget imageButtons(AddProductProvider cameraProvider) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          onPressed: () {
-            cameraProvider.selectImage(ImageSource.gallery);
-          },
-          icon: Icon(
-            Icons.perm_media,
-            color: Colors.blue,
-            size: 50,
-          ),
-        ),
-        IconButton(
+    return Card(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
             onPressed: () {
-              cameraProvider.selectImage(ImageSource.camera);
+              cameraProvider.selectImage(ImageSource.gallery);
             },
             icon: Icon(
-              Icons.camera_alt,
+              Icons.perm_media,
               color: Colors.blue,
-              size: 50,
-            )),
-      ],
+              size: 30,
+            ),
+          ),
+          IconButton(
+              onPressed: () {
+                cameraProvider.selectImage(ImageSource.camera);
+              },
+              icon: Icon(
+                Icons.camera_alt,
+                color: Colors.blue,
+                size: 30,
+              )),
+        ],
+      ),
     );
   }
 }

@@ -9,7 +9,7 @@ class Authentication with ChangeNotifier {
   String _userName;
   String _fullName;
   bool _isSignedIn = false;
-  String _personal_uid;
+  String _personalUid;
 
   Authentication() {
     FirebaseFirestore.instance.collection('users').get().then((QuerySnapshot querySnapshot) => {
@@ -38,15 +38,12 @@ class Authentication with ChangeNotifier {
   }
 
   Future<void> signUp(CollectionReference users, String email, String password, String fullName, String userName, BuildContext context) async {
-    UserCredential userCredential;
     try {
-      userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).whenComplete(() {
-        bool isSignedIn;
-
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password).whenComplete(() {
         FirebaseAuth.instance.authStateChanges().listen((User user) {
           if (user != null) {
             Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
-            uploadUserInfo(users, email, fullName, userName, _personal_uid);
+            uploadUserInfo(users, email, fullName, userName, _personalUid);
           }
         });
       });
@@ -63,13 +60,11 @@ class Authentication with ChangeNotifier {
 
   Future<void> signIn(String email, String password, BuildContext context) async {
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       )
           .whenComplete(() async {
-        //authState(context);
         if (FirebaseAuth.instance.currentUser != null) {
           Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
         }
@@ -99,21 +94,6 @@ class Authentication with ChangeNotifier {
 
   void resetPassword() {}
 
-  /*void authState(BuildContext context) {
-
-    FirebaseAuth.instance.authStateChanges().listen((User user) {
-      if (user == null) {
-        _isSignedIn = false;
-        showSnackBar(context, "current state:  not authenticated!");
-      } else {
-        _personal_uid = user.uid;
-        _isSignedIn = true;
-        Navigator.pushReplacementNamed(context, ProductsOverview.routeName);
-        showSnackBar(context, "current state:  authenticated!");
-      }
-    });
-    notifyListeners();
-  }*/
 
   Future<void> uploadUserInfo(CollectionReference users, String email, String fullName, String userName, String sessionKey) async {
     users.add({"email": email, "fullName": fullName, "userName": userName, "sessionKey": sessionKey});
